@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Wallet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/AngularController/WalletController.js"></script>
+
+<h2>Wallet</h2>
+
+<div class="row" ng-controller="WalletController">
+    <div class="col-md-6">
+        <table>
+            <tr>
+                <th>Ticket id &emsp;</th>
+                <th>Bet amount &emsp;</th>
+                <th>Profit &emsp;</th>
+                <th>Payment time &emsp;</th>
+                <th>Odds&emsp;</th>
+                <th>Bonus&emsp;</th>
+
+
+            </tr>
+            
+            <tr ng-repeat="ticket in tickets | orderBy:'-PaymentTime'">
+                <td>{{ticket.TicketID}}</td>
+              
+                <td>{{ticket.BetAmount}} kn</td>
+
+                <td>{{ticket.Profit}} kn</td>
+                <td>{{ticket.PaymentTime}} </td>
+                <td>{{ticket.Odds}}</td>
+                <td>{{ticket.Bonus}} </td>
+
+                <td><button class="btn" ng-click="viewDetails(ticket.Events,ticket.Choosen)">View details</button> &emsp; </td>
+                
+
+
+</table>
+        
+    </div>
+    <div class="col-md-6">
+       
+        <table>
+            <tr>
+                <th>Event ID &emsp;</th>
+                <th>Sport type &emsp;</th>
+                <th>Event name &emsp;</th>
+                <th>Choosen tip&emsp;</th>
+            </tr>
+            <tr ng-repeat="event in events">
+                <td>{{event.EventID}}</td>
+
+                <td>{{event.Type}} &emsp;</td>
+
+                <td>{{event.Name}}&emsp; </td>
+
+                <td>{{event.Choosen}}</td>
+
+            </tr>
+            <tr>
+                <td>Total played events: {{eventNumber}}</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+

@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script src="~/Scripts/AngularController/HomeControler.js"></script>
+
+<div class="jumbotron">
+    <h1><font color="blue">Hatrick PSK</font></h1>
+    <p class="lead">Dostupni bonusi</p>
+        <p>Odabir 3 događaja iz istog sporta ---> 5 koeficijenata bonusa</p>
+        <p>Odabir događaja iz svih sportova  ---> 10 koeficijenata bonusa</p>
+    </div>
+
+<div class="row" ng-controller="HomeController">
+    <div class="col-md-7">
+        <table>
+            <tr>
+                <th>Event ID &emsp;</th>
+                <th>Sport type &emsp;</th>
+                <th>Event name &emsp;</th>
+                <th>1 &emsp;</th>
+                <th>2 &emsp;</th>
+                <th>X &emsp;</th>
+            </tr>
+            <tr ng-repeat="event in events"  >
+                <td>{{event.EventID}}</td>
+                <br />
+                <td>{{event.Type}} </td>
+
+                <td>{{event.Name}} </td>
+
+                <td><button class="btn"  ng-click="addChoosenEventToList(event, event.Tip1,'1')">{{event.Tip1}}</button> &emsp; </td>
+
+                <td><button class="btn"  ng-click="addChoosenEventToList(event,event.Tip2,'2')">{{event.Tip2}}</button> &emsp; </td>
+
+                <td><button class="btn"  ng-click="addChoosenEventToList(event,event.TipX,'X')">{{event.TipX}}</button> &emsp; </td>
+                </>
+            </tr>
+            
+        </table>
+    </div>
+    <div class="col-md-5">
+        <table>
+            <h3>Ticket</h3>
+            <tr>
+                <th>Event ID </th>
+                <th>Sport type </th>
+                <th>Event name</th>
+                <th>Choosen tip </th>
+                <th>Odds</th>
+
+            </tr>
+            
+            <tr ng-repeat="choosenEvent in choosenEvents">
+                <td>{{choosenEvent.EventID}}</td>
+
+                <td>{{choosenEvent.Type}}</td>
+
+                <td>{{choosenEvent.Name}}</td>
+
+                <td>{{choosenEvent.Tip}}</td>
+
+                <td>{{choosenEvent.Odds}}</td>
+
+                <td><button  ng-click="DeleteSingleEvent(choosenEvent)">Delete</button></td>
+            </tr>
+           
+            <tr>
+                <td>Total odds: {{totalOdds}} &emsp;</td>
+                <td>
+                   Enter bet amount
+                    <form>
+                        <input name="betAmount" ng-maxlength="7" ng-model="betAmount" ng-change="profitAmount()" required />kn
+                    </form>
+
+                </td>
+
+                <br />&emsp;
+                <td>Profit: {{profit}} kn</td></br>
+
+            </tr>
+
+        </table>
+        <button ng-click="deleteAllData()">Delete all </button> &emsp;
+        <button ng-click="ticketPayment(choosenEvents)"  ng-disabled="((betAmount<=10000 && betAmount>0) && choosenEvents.length>0) ? false : true">Payment</button>
+    </div>
+
+</div>
