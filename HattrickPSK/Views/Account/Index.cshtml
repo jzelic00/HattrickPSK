@@ -1,0 +1,57 @@
+﻿@model HattrickPSK.Models.User
+
+
+@{
+    ViewBag.Title = "Profil information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Profil information</h2>
+
+@using (Html.BeginForm())
+{
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @Html.DisplayFor(model => model.FirstName)
+
+        <div class="col-md-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.DisplayFor(model => model.LastName)
+
+        <div class="col-md-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.DisplayFor(model => model.Username)
+        <div class="col-md-2">
+            @Html.DisplayNameFor(model => model.Username)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.DisplayFor(model => model.Email)
+        <div class="col-md-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.DisplayFor(model => model.Balance)
+        <div class="col-md-2">
+            @Html.DisplayNameFor(model => model.Balance)
+
+        </div>
+    </div>
+    <td>
+        @Html.ActionLink("Change Password", "ChangePassword", new { id = Session["UserID"] })
+        &emsp;
+    </td>
+
+    <td>
+        @Html.ActionLink("Add balance", "AddBalance", new { id = Session["UserID"] })
+    </td>
+</div>
+}

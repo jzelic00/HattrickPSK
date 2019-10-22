@@ -1,0 +1,42 @@
+﻿@model HattrickPSK.Models.User
+
+@{
+    ViewBag.Title = "AddBalance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddBalance</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UserID)
+
+
+        <div class="form-group">
+            @Html.Label("Enter amount to add", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="amount" data-val="true" data-val-required="This field is required" class="form-control" id="balance" type="text">
+                @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add balance" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to profil information", "Index")
+</div>
+
+

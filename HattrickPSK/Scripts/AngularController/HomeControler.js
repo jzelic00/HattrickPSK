@@ -2,20 +2,21 @@
 
 myApp.controller("HomeController", function ($scope, $http) {
 
-
+    var bonus5 = false;
+    var bonus10 = true;
 	var sportTypes = [0,0,0,0,0];
-	var events = {};	
+	
 	var newEvent = {};	
 	var deletingIndex = 0;
-	var flag = 0;
+	
 
 	$scope.choosenEvents = [];
-	$scope.totalOdds = 1;
+	$scope.totalOdds = 1.00;
 	$scope.profit = 0;	
 	$scope.betAmount = 0;
 	$scope.bonus = 0;
 
-
+    //getting all events from server
 	$http.get('/Home/GetEvents')
 		.then(function succesCallback(response) {		
 			$scope.events = response.data;
@@ -23,190 +24,205 @@ myApp.controller("HomeController", function ($scope, $http) {
 			alert("Error In data");
 		});
 
-	$scope.addChoosenEventToList = function (ListedEvent, ListedEventOdds, ListedEventTip) {
+    //adding choosen event to list
+    $scope.addChoosenEventToList = function (ListedEvent, ListedEventOdds, ListedEventTip) {
 
-		newEvent.EventID = ListedEvent.EventID;
-		newEvent.Type = ListedEvent.Type;
-		newEvent.Name = ListedEvent.Name;
-		newEvent.Tip = ListedEventTip;
-		newEvent.Odds = ListedEventOdds;
+        newEvent.EventID = ListedEvent.EventID;
+        newEvent.Type = ListedEvent.Type;
+        newEvent.Name = ListedEvent.Name;
+        newEvent.Tip = ListedEventTip;
+        newEvent.Odds = ListedEventOdds;
+        
 
-			for (i = 0; i < $scope.choosenEvents.length; i++) {
+
+        // if the event already on ticket but user want to change type
+        for (i = 0; i < $scope.choosenEvents.length; i++) {
 
 
-				if ($scope.choosenEvents[i].EventID === ListedEvent.EventID) {
-					$scope.totalOdds = Number.parseFloat(($scope.totalOdds / $scope.choosenEvents[i].Odds) * ListedEventOdds).toFixed(4);
-			
-					$scope.profitAmount();
+            if ($scope.choosenEvents[i].EventID === ListedEvent.EventID) {
+                $scope.totalOdds = Number.parseFloat(($scope.totalOdds / $scope.choosenEvents[i].Odds) * ListedEventOdds).toFixed(4);
 
-					$scope.choosenEvents[i].Tip = ListedEventTip;
-					$scope.choosenEvents[i].Odds = ListedEventOdds;
+                $scope.profitAmount();
 
-					return;
-				}
-			}
-			$scope.choosenEvents.push(newEvent);
+                $scope.choosenEvents[i].Tip = ListedEventTip;
+                $scope.choosenEvents[i].Odds = ListedEventOdds;
 
-		$scope.totalOdds *= ListedEventOdds;
-		$scope.totalOdds = Number.parseFloat($scope.totalOdds).toFixed(4);
-		
-		newEvent = {};
-		
-		$scope.profitAmount();
+                return;
+            }
+        }
+        $scope.choosenEvents.push(newEvent);
 
-	}
+        $scope.totalOdds *= ListedEventOdds;
+        $scope.totalOdds = Number.parseFloat($scope.totalOdds).toFixed(4);
 
-	$scope.profitAmount = function () {
+        newEvent = {};
 
-		$scope.profit = Number.parseFloat($scope.totalOdds * $scope.betAmount).toFixed(2);
-	}
+        $scope.profitAmount();
 
-	$scope.deleteAllData = function () {
+    };
 
-		$scope.choosenEvents.length = 0;
-		$scope.totalOdds = 1;
-		$scope.bonus = 0;
-		$scope.betAmount = 0;
-		$scope.profitAmount();
-	}
+    $scope.profitAmount = function () {
 
-	$scope.ticketPayment = function (choosenEvents) {
+        $scope.profit = Number.parseFloat($scope.totalOdds * $scope.betAmount).toFixed(2);
+    };
 
-		$scope.bonusAddChecking(choosenEvents);
+    $scope.deleteAllData = function () {
 
-		$scope.deleteUnnecessaryPropertyForTicketSending(choosenEvents);
+        $scope.choosenEvents.length = 0;
+        $scope.totalOdds = 1.00;
+        $scope.bonus = 0;
+        $scope.betAmount = 0;
+        $scope.profitAmount();
+    };
 
-		$http.post('/Home/TicketRecive', { addTicket: choosenEvents, totalOdds: $scope.totalOdds, bonus: $scope.bonus, betAmount: $scope.betAmount, profit: $scope.profit}).
-			then(function succesCallback(response) {
-				if (response.status === 200) {
+    $scope.ticketPayment = function (choosenEvents) {
 
-					$scope.choosenEvents.length = 0;
+        $scope.bonusAddChecking(choosenEvents);
 
-					alert("Ticket has been added\n\n" +
-						"You get " + $scope.bonus+ " bonus \n" +
-						"Total odds: " + $scope.totalOdds +
-						"\nTotal profit amount: " + $scope.profit
-					);
-					
-					$scope.deleteAllData();
-					sportTypes = [0,0,0,0,0];
-					$scope.betAmount = 0;
-				}
-			}), function errorCallback(response) {
-				alert("Error in ticket upload, try later");
-			};
-		
-		
-	}
+        $scope.deleteUnnecessaryPropertyForTicketSending(choosenEvents);
 
-	$scope.deleteUnnecessaryPropertyForTicketSending = function (choosenEvents) {
+        $http.post('/Home/TicketRecive', { choosenEvents: choosenEvents, totalOdds: $scope.totalOdds, bonus5: bonus5, bonus10: bonus10, betAmount: $scope.betAmount }).
+            then(function succesCallback(response) {
+                if (response.data === 0) {
+
+                    $scope.choosenEvents.length = 0;
+
+                    alert("Ticket has been added\n\n" +
+                        "You get " + $scope.bonus + " bonus \n" +
+                        "Total odds: " + $scope.totalOdds +
+                        "\nTotal profit amount: " + $scope.totalOdds * $scope.betAmount + " kn"
+                    );
+                    //removing all choosen pairs
+                    $scope.deleteAllData();
+                    //reseting choosen sport types
+                    sportTypes = [0, 0, 0, 0, 0];
+                    $scope.betAmount = 0;
+                }
+                else {
+                    //show error if user dont have enought balance
+                    alert(response.data);
+                    location.reload();
+                }
+            }), function errorCallback(response) {
+                alert("Error in ticket upload, try later");
+            };
+
+
+    }; 
+
+    //removing unnecessary properys from choosen event
+    $scope.deleteUnnecessaryPropertyForTicketSending = function (choosenEvents) {
+
+        angular.forEach(choosenEvents, function (singleChoosenEvent) {
+            delete singleChoosenEvent.Odds;
+            delete singleChoosenEvent.Name;
+            delete singleChoosenEvent.Type;
+        });
+    };
+
+    //deleting choosen events from ticket and recalculating profit amount
+    $scope.DeleteSingleEvent = function (choosenEvent) {
+
+        deletingIndex = $scope.choosenEvents.indexOf(choosenEvent);
+
+        $scope.totalOdds = Number.parseFloat($scope.totalOdds / $scope.choosenEvents[deletingIndex].Odds).toFixed(4);
+        $scope.profitAmount();
+
+        $scope.choosenEvents.splice(deletingIndex, 1);
+    };
+
+    //checking if user have any bonus
+    $scope.bonusAddChecking = function (choosenEvents) {
+
+        if (choosenEvents.length < 3)
+            return bonus10=false;
+        else {
+            for (i = 0; i < choosenEvents.length; i++) {
+                switch (choosenEvents[i].Type) {
+
+                    case 'Football':
+                        sportTypes[0] += 1;
+                        break;
+                    case 'Basketball':
+                        sportTypes[1] += 1;
+                        break;
+                    case 'Box':
+                        sportTypes[2] += 1;
+                        break;
+                    case 'Handball':
+                        sportTypes[3] += 1;
+                        break;
+                    case 'Tenis':
+                        sportTypes[4] += 1;
+                        break;
+
+                }
+            }
+
+        }
+
+
+        $scope.addBonus5(sportTypes);
+        $scope.addBonus10(sportTypes);
+
+        $scope.totalOdds = (Number.parseFloat($scope.totalOdds) + Number.parseFloat($scope.bonus)).toString();
+
+        $scope.profitAmount();
+    };
+
 	
-		angular.forEach(choosenEvents, function (singleChoosenEvent) {
-			delete singleChoosenEvent.Odds;
-			delete singleChoosenEvent.Name;
-			delete singleChoosenEvent.Type;
-		});
-	}
+    $scope.addBonus5 = function (sportTypes) {
+        $scope.calculateSportTypeBonusesForBonus5(sportTypes);
+    };
 
-	$scope.DeleteSingleEvent = function (choosenEvent) {
+    $scope.calculateSportTypeBonusesForBonus5 = function (sportTypes) {
 
-		deletingIndex = $scope.choosenEvents.indexOf(choosenEvent);
+        angular.forEach(sportTypes, function (singleSportType) {
+            $scope.bonus += $scope.addBonusIfEligableForBonus5(singleSportType);
+        });
+    };
 
-		$scope.totalOdds = Number.parseFloat($scope.totalOdds / $scope.choosenEvents[deletingIndex].Odds).toFixed(4);
-		$scope.profitAmount();
-		
-		$scope.choosenEvents.splice(deletingIndex, 1);
-	}
+    $scope.addBonusIfEligableForBonus5 = function (singleSportType) {
 
-	$scope.bonusAddChecking = function (choosenEvents) {
-		
-		if (choosenEvents.length < 2)
-			return;
-		else {
-			for (i = 0; i < choosenEvents.length; i++) {
-				switch (choosenEvents[i].Type) {
+        if (bonus5 === false && singleSportType >= 3)
+        {
+            bonus5 = true;
+            return 5;
+        }           
+        else 
+            return 0;
+        
 
-					case 'Football':
-						sportTypes[0] += 1;
-						break;
-					case 'Basketball':
-						sportTypes[1] += 1;
-						break;
-					case 'Box':
-						sportTypes[2] += 1;
-						break;
-					case 'Handball':
-						sportTypes[3] += 1;
-						break;
-					case 'Tenis':
-						sportTypes[4] += 1;
-						break;
+    };
 
-				}
-			}
-					
-		}
+    $scope.addBonus10 = function (sportTypes) {
+        $scope.calculateSportTypeBonusesForBonus10(sportTypes);
 
-	
-		$scope.addBonus5(sportTypes);
-		$scope.addBonus10(sportTypes);
-		
-		$scope.totalOdds = (Number.parseFloat($scope.totalOdds) + $scope.bonus).toString();
-		
-		$scope.profitAmount();
-	}
+    };
 
-	
-	$scope.addBonus5 = function (sportTypes) {
-		$scope.calculateSportTypeBonusesForBonus5(sportTypes)
-	}
+    $scope.calculateSportTypeBonusesForBonus10 = function (sportTypes) {
 
-	$scope.calculateSportTypeBonusesForBonus5 = function (sportTypes)
-	{
-	
-		angular.forEach(sportTypes, function (singleSportType) {
-			$scope.bonus += $scope.addBonusIfEligableForBonus5(singleSportType);
-		});
-	}
+        for (i = 0; i < sportTypes.length; i++)
+            if ($scope.addBonusIfEligableForBonus10(sportTypes[i]) === 0) {
+                bonus10=false;
+                break;
+            }
 
-	$scope.addBonusIfEligableForBonus5 = function (singleSportType) {
-	
-		if (singleSportType < 3)
-			return 0;
+        $scope.bonus += $scope.checkingFlagStatusForAddingBonus10(bonus10);
 
-		return 5;
-	}
+    };
 
-	$scope.addBonus10 = function (sportTypes) {
-		$scope.calculateSportTypeBonusesForBonus10(sportTypes)
-	
-	}
+    $scope.addBonusIfEligableForBonus10 = function (singleSportType) {
+        if (singleSportType === 0)
+            return 0;
 
-	$scope.calculateSportTypeBonusesForBonus10 = function(sportTypes)
-	{		
+        return 1;
+    };
 
-		for (i = 0; i < sportTypes.length; i++)
-			if ($scope.addBonusIfEligableForBonus10(sportTypes[i]) === 0) {
-				flag = 1;
-				break;
-			}
-				
-		$scope.bonus += $scope.checkingFlagStatusForAddingBonus10(flag);
-		
-	}
+    $scope.checkingFlagStatusForAddingBonus10 = function (bonus10) {
+        if (bonus10 === true)
+            return 10;
 
-	$scope.addBonusIfEligableForBonus10 = function (singleSportType) {
-		if (singleSportType === 0)
-			return 0;
-
-		return 1;
-	}
-
-	$scope.checkingFlagStatusForAddingBonus10 = function(flag)
-	{
-		if (flag === 0)
-			return 10;
-
-		return 0;
-	}
+        return 0;
+    };
 });

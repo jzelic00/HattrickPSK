@@ -1,33 +1,58 @@
 ﻿myApp.controller("WalletController", function ($scope, $http) {
 
 
-	var ticket = {};
+	
 	$scope.events = [];
-
+    
+   //get all tickets of user
 	$http.get('/Wallet/GetTicket')
-		.then(function succesCallback(response) {
-			console.log(response.data);
-			$scope.tickets = response.data;
+        .then(function succesCallback(response) {
+                      
+            $scope.tickets = response.data;
+
+         
+            
 		}, function errorCallback(response) {
 
 			alert("Error In data");
 		});
 
-	$scope.viewDetails = function (Events, Choosen) {
-		$scope.events.length = 0;
+    $scope.paymentTime = function (paymenttime) {
+        
+        //removing /Date from asp.net date 
+        var date = new Date(parseInt(paymenttime.substr(6)));
 
-		console.log($scope.events.length);
-		for (i = 0; i < Events.length; i++) {
-			$scope.events.push({
-				EventID: Events[i].EventID,
-				Type: Events[i].Type,
-				Name: Events[i].Name,
-				Choosen: Choosen[i],
-			});
-		}
+        //getting date and time from date variable
+        var min = date.getMinutes();
+        if (min < 10) min = "0" + min;
+        var hh = date.getHours();
+        if (hh < 10) hh = "0" + hh;       
+        var mm = date.getMonth();
+        var dd = date.getDate();
+        var yyyy = date.getFullYear();
+        if (mm < 10) mm = "0" + mm;
+        if (dd < 10) dd = "0" + dd;
+        return "" + yyyy.toString() + "-" + mm + "-" + dd + "   " + hh + ":" + min;
+        
+    };
+
+    //view what events are on ticket
+    $scope.viewDetails = function (Choosen) {
+        $scope.events.length = 0;
+
+        
+        for (i = 0; i < Choosen.length; i++) {
+            $scope.events.push({
+                EventID: Choosen[i].EventID,
+                Type: Choosen[i].Event.Type,
+                Name: Choosen[i].Event.Name,
+                Choosen: Choosen[i].Tip
+            });
+        }
 
 
-		$scope.eventNumber = $scope.events.length;
-		console.log($scope.events.length);
-	}
+        $scope.eventNumber = $scope.events.length;
+
+
+    };
 });

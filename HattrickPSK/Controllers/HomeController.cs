@@ -10,20 +10,13 @@ using HattrickPSK.Models;
 
 namespace HattrickPSK.Controllers
 {
-    public class NewTicket
-    {
-        public int EventID { get; set; }
-  
-        public string Tip { get; set; }
-       
-        
-    }
+    
 
     public class HomeController : Controller
     {
 
 
-        //private DatabaseContext dbConnection = new DatabaseContext();
+       
         public ActionResult Index()
         {
 
@@ -37,12 +30,11 @@ namespace HattrickPSK.Controllers
             
             using (var dbConnection = new DatabaseContext())
             {
-
                 
                 List<Event> events = dbConnection.Event.ToList();
 
-                //var reducedList = events.Select(e => new { e.EventID, e.Type, e.Name, e.TipX, e.Tip1, e.Tip2 }).ToList();
-                
+          
+
                 return Json(events, JsonRequestBehavior.AllowGet);
             }
         }
@@ -50,39 +42,47 @@ namespace HattrickPSK.Controllers
 
 
         [HttpPost]
-        public JsonResult TicketRecive(List<NewTicket> addTicket, string totalOdds, string bonus, string betAmount, string profit)
+        public JsonResult TicketRecive(ICollection<TicketEvent> choosenEvents, string totalOdds, bool bonus5,bool bonus10, string betAmount)
         {
+           
             using (var dbConnection = new DatabaseContext())
             {
-                List<Contain> newContain = new List<Contain>();
+                
 
+               Ticket newTicket = new Ticket();
 
-                Ticket newTicket = new Ticket
+                newTicket.UserID = Convert.ToInt32(Session["UserID"]);
+                newTicket.User = dbConnection.User.Find(newTicket.UserID);
+                newTicket.BetAmount = decimal.Parse(betAmount, CultureInfo.InvariantCulture);
+
+                if (newTicket.User.Balance < newTicket.BetAmount)
                 {
+                    string error = "Nedovoljan iznos na racunu, izvršite nadoplatu na /Account/addBalance"; 
+                    
+                    return Json(error,JsonRequestBehavior.AllowGet);
+                }
 
-                    Bonus = int.Parse(bonus),
-                    PaymentTime = DateTime.Now,
-                    Odds = Decimal.Parse(totalOdds, CultureInfo.InvariantCulture),
+                newTicket.User.Balance -= newTicket.BetAmount;
 
-                    BetAmount = Decimal.Parse(betAmount, CultureInfo.InvariantCulture),
-                    Profit = Decimal.Parse(profit, CultureInfo.InvariantCulture)
-                };
+                newTicket.Bonus5 = bonus5;
+                newTicket.Bonus10 = bonus10;
+                
+                
+                newTicket.Odds = decimal.Parse(totalOdds, CultureInfo.InvariantCulture);
+                newTicket.PaymentTime = DateTime.Now;
+               
 
                 dbConnection.Ticket.Add(newTicket);
 
-                foreach (NewTicket x in addTicket)
+                foreach (TicketEvent choosenEvent in choosenEvents)
                 {
+                    
+                    dbConnection.TicketEvent.Add(choosenEvent);
 
-                    dbConnection.Contain.Add(new Contain
-                    {
-                        EventID = x.EventID,
-                        TicketID = newTicket.TicketID,
-                        Chosen = x.Tip
-                    });
                 }
 
+                
                 dbConnection.SaveChanges();
-
 
                 return Json(JsonRequestBehavior.AllowGet);
             }

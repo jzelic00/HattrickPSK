@@ -14,8 +14,10 @@ namespace HattrickPSK.Models
             //Database.SetInitializer(new CreateDatabaseIfNotExists<DatabaseContext>());
             Database.SetInitializer(new HattrickPSKDBInitializer());
         }
-       public DbSet<Contain> Contain { get; set; }
+       public DbSet<TicketEvent> TicketEvent { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
+
+        public DbSet<User> User { get; set; }
     }  
 }

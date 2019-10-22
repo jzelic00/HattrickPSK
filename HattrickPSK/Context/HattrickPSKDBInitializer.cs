@@ -26,12 +26,22 @@ namespace HattrickPSK.Models
                 new Event() { Type = "Tenis", Name = "Đokovic - Cilić", Tip1 = 1.20m, Tip2 = 1.60m, TipX = 4.35m }
             };
 
-
+            User defaultUser = new User
+            {
+                Username="jzelic00",
+                FirstName = "Josip",
+                LastName = "Zelić",
+                Password = "12345",
+                Balance = 1000,
+                Email = "jzelic00@fesb.hr"
+            };
 
             context.Event.AddRange(defaultEvents);
-
+            context.User.Add(defaultUser);
                 base.Seed(context);
             }
+
+        
         
     }
 }
