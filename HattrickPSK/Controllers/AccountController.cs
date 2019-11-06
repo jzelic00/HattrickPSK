@@ -6,36 +6,21 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using HattrickPSK.DataAcces;
+using HattrickPSK.Services;
 using HattrickPSK.Models;
 
 namespace HattrickPSK.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly DatabaseContext db = new DatabaseContext();
-        
-
+        DAL dataAcces = new DAL();
+        DatabaseContext db = new DatabaseContext();
         // GET: Users
         public ActionResult Index()
         {
-            return View(db.User.Find(Session["UserID"]));
+            return View(dataAcces.findUserByID(Convert.ToInt32(Session["UserID"])));
         }
-
-        // GET: Users/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.User.Find(Session["UserID"]);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            return View(user);
-        }
-
 
         public ActionResult AddBalance()
         {          
@@ -46,21 +31,20 @@ namespace HattrickPSK.Controllers
         [HttpPost]
         public ActionResult AddBalance(decimal amount)
         {
-            
+            AddBalanceService addBalance = new AddBalanceService();
+            //if (amount < 0 || amount > 1000)
+            //{
+              //Response.Write("<script>alert('Pogresno unesen iznos (max. 1000 min. 1)')</script>");
 
-            if (amount < 0 || amount > 1000)
-            {
-                Response.Write("<script>alert('Pogresno unesen iznos (max. 1000 min. 1)')</script>");
-
-                return View();
-            }
-            else
-            {
-                User user = db.User.Find(Session["UserID"]);
-                user.Balance += amount;
-                db.SaveChanges();
+            //    return View();
+            //}
+            //else
+            //{
+            //    User user = db.User.Find(Session["UserID"]);
+            //    user.Balance += amount;
+            //    db.SaveChanges();w
                 return RedirectToAction("Index");
-            }
+            
         }
        
         //
@@ -78,10 +62,8 @@ namespace HattrickPSK.Controllers
             User user = db.User.Find(Session["UserID"]);
 
             if (user.Password.Equals(oldPassword))
-            {
-               
+            {               
                 user.Password = newPassword;
-
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

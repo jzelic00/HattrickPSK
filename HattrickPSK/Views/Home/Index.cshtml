@@ -13,7 +13,7 @@
 
 <div class="row" ng-controller="HomeController">
     <div class="col-md-7">
-        <table>
+        <table class="table table-striped table-dark">
             <tr>
                 <th>Event ID &emsp;</th>
                 <th>Sport type &emsp;</th>
@@ -40,7 +40,7 @@
         </table>
     </div>
     <div class="col-md-5">
-        <table>
+        <table class="table table-striped table-dark">
             <h3>Ticket</h3>
             <tr>
                 <th>Event ID </th>
@@ -50,7 +50,7 @@
                 <th>Odds</th>
 
             </tr>
-            
+
             <tr ng-repeat="choosenEvent in choosenEvents">
                 <td>{{choosenEvent.EventID}}</td>
 
@@ -62,13 +62,13 @@
 
                 <td>{{choosenEvent.Odds}}</td>
 
-                <td><button  ng-click="DeleteSingleEvent(choosenEvent)">Delete</button></td>
+                <td><button class="btn btn-warning" ng-click="DeleteSingleEvent(choosenEvent)">Delete</button></td>
             </tr>
-           
+
             <tr>
                 <td>Total odds: {{totalOdds}} &emsp;</td>
                 <td>
-                   Enter bet amount
+                    Enter bet amount
                     <form>
                         <input name="betAmount" ng-maxlength="7" ng-model="betAmount" ng-change="profitAmount()" required />kn
                     </form>
@@ -81,8 +81,9 @@
             </tr>
 
         </table>
-        <button ng-click="deleteAllData()">Delete all </button> &emsp;
-        <button ng-click="ticketPayment(choosenEvents)"  ng-disabled="((betAmount<=10000 && betAmount>0) && choosenEvents.length>0) ? false : true">Payment</button>
+
+        <button class="btn btn-primary" ng-click="ticketPayment(choosenEvents)" ng-disabled="((betAmount<=10000 && betAmount>0) && choosenEvents.length>0) ? false : true">Payment</button>
+        <button class="btn btn-secondary" ng-click="deleteAllData()">Delete all </button> &emsp;
     </div>
 
 </div>

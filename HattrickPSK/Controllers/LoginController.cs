@@ -5,48 +5,44 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using HattrickPSK.Models;
+using HattrickPSK.Services;
+using HattrickPSK.DataAcces;
+using HattrickPSK.Messages;
 
 namespace HattrickPSK.Controllers
 {
     public class LoginController : Controller
     {
+        ResponseMessages responseMessage = new ResponseMessages();
+        DAL dataAcces = new DAL();
+
         // GET: Login
         public ActionResult Index()
         {
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(User user)
         {
-            //searching for user in database and creating his seesion
-            using (DatabaseContext db = new DatabaseContext())
-            {
-                var tmp = db.User.Where(a => a.Username.Equals(user.Username) && a.Password.Equals(user.Password)).FirstOrDefault();
-                if (tmp != null)
+            User currentUser = dataAcces.UserAutentification(user);
+                if (currentUser !=null)
                 {
-                    Session["UserID"] = tmp.UserID;
-                   
+                    Session["UserID"] = Convert.ToInt32(currentUser.UserID);                  
                     return RedirectToAction("Index","Home");
                 }
                 else
-                    Response.Write("<script>alert('Pogrešno uneseni podaci, pokušajte ponovno')</script>");
-
-                return View();
-            }
+                    Response.Write(responseMessage.LoginDataWrong());
+                return View();           
         }
 
-        //user logut
+        //user logout
         public ActionResult Logout()
         {
-
             Session.Abandon();
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index","Login");
         }
-
-
        
         public ActionResult ForgottenPassword()
         {
@@ -57,51 +53,21 @@ namespace HattrickPSK.Controllers
         [HttpPost]
         public ActionResult ForgottenPassword(User user)
         {
-            
-            using (DatabaseContext db = new DatabaseContext())
+            User currentUser = dataAcces.findUserByEmail(user.Email);
+            if (currentUser != null)
             {
-                //looking if there is user with that email in database
-                var tmp = db.User.Where(a => a.Email.Equals(user.Email)).FirstOrDefault();
-
-                //sending mail with password to user
-                if (tmp != null)
+                SendMail sendMail = new SendMail();               
+                if (sendMail.Send(new MailMesage(currentUser, new BodyMessages()), new SmtpConnection()) != "")
                 {
-                    try
-                    {
-                        MailMessage mailMessage = new MailMessage();
-                        mailMessage.To.Add(user.Email);
-                        mailMessage.From = new MailAddress("hattrickpsk@outlook.com");
-
-                        mailMessage.Subject = "Welcome to HattrickPSK";
-                        mailMessage.Body = "Username: " + tmp.Username + "\nPassword:  " + tmp.Password;
-
-                        SmtpClient smtpClient = new SmtpClient("smtp.live.com", 587)
-                        {
-                            EnableSsl = true,
-
-                            Credentials = new System.Net.NetworkCredential("hattrickpsk@outlook.com", "Grf55psf")
-                        };
-                        smtpClient.Send(mailMessage);
-                    }
-                    catch (Exception ex)
-                    {
-                        Response.Write(ex.Message);
-                        return View();
-                    }
+                    Response.Write(responseMessage.MailSendingError());
                 }
-                else
-                {
-                    Response.Write("<script>alert('Unesena email adresa nepostoji, pokušajte ponovno')</script>");
-                    return View();
-                }
-
+            }             
+            else
+            {
+                Response.Write(responseMessage.ForgotenPasswordWrongMail());
+                return View();
             }
-         
-
-            //redirecting user to login page
-
-            return RedirectToAction("Index", "Login");
-
+            return RedirectToAction("Index", "Login");          
         }
     }
 }

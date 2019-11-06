@@ -6,52 +6,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Profil information</h2>
-
+<h3>Profil information</h3>
+<br />
 @using (Html.BeginForm())
 {
-<div class="form-horizontal">
+<form class="form-horizontal">
 
     <div class="form-group">
+        <label>First name:</label>
+
         @Html.DisplayFor(model => model.FirstName)
 
-        <div class="col-md-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </div>
+    </div>
+        
+    <div class="form-group" >
+        <label>Last name:</label>
+        
+            @Html.DisplayFor(model => model.LastName)
+        
     </div>
     <div class="form-group">
-        @Html.DisplayFor(model => model.LastName)
-
-        <div class="col-md-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </div>
+        <label>Username:</label>
+        
+            @Html.DisplayFor(model => model.Username)
+       
     </div>
     <div class="form-group">
-        @Html.DisplayFor(model => model.Username)
-        <div class="col-md-2">
-            @Html.DisplayNameFor(model => model.Username)
-        </div>
-    </div>
-    <div class="form-group">
+        <label>Email:</label>
         @Html.DisplayFor(model => model.Email)
-        <div class="col-md-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </div>
+
     </div>
     <div class="form-group">
+        <label >Balance:</label>
         @Html.DisplayFor(model => model.Balance)
-        <div class="col-md-2">
-            @Html.DisplayNameFor(model => model.Balance)
-
-        </div>
     </div>
-    <td>
+    <td class="col-sm-2">
         @Html.ActionLink("Change Password", "ChangePassword", new { id = Session["UserID"] })
         &emsp;
     </td>
 
-    <td>
+    <td class="col-sm-5">
         @Html.ActionLink("Add balance", "AddBalance", new { id = Session["UserID"] })
     </td>
-</div>
+</form>
 }

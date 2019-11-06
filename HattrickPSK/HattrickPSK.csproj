@@ -357,9 +357,15 @@
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\WalletController.cs" />
+    <Compile Include="DataAcces\DAL.cs" />
+    <Compile Include="DataAcces\DataAccesInterface.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Messages\ResponseMessages.cs" />
+    <Compile Include="Messages\IMessage.cs" />
+    <Compile Include="Messages\BodyMessages.cs" />
+    <Compile Include="Messages\IResponseErrorMessages.cs" />
     <Compile Include="Migrations\201910182331057_InitialCreate.cs" />
     <Compile Include="Migrations\201910182331057_InitialCreate.Designer.cs">
       <DependentUpon>201910182331057_InitialCreate.cs</DependentUpon>
@@ -372,6 +378,12 @@
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AddBalanceService.cs" />
+    <Compile Include="Services\AddTicket.cs" />
+    <Compile Include="Services\IMailProviderConnection.cs" />
+    <Compile Include="Services\MailMesage.cs" />
+    <Compile Include="Services\SendMail.cs" />
+    <Compile Include="Services\SmtpConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
