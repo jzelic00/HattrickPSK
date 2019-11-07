@@ -18,16 +18,13 @@ namespace HattrickPSK.Services
         {
             newTicket.User = dataAccess.findUserByID(userId);           
         }
-
-        //mozda ovo u novu klasu spremit
+      
         public bool checkBalance(string betAmount)
-        {           
+        {
             if (decimal.TryParse(betAmount, out betAmountConverted))
-                if (newTicket.User.Balance < betAmountConverted)
-                    return false;           
-                else
-                    return true;
-            return false;
+                return newTicket.User.Balance > betAmountConverted;
+
+            return false;         
         }
 
         public bool MakeTransaction(ICollection<TicketEvent> choosenEvents, string totalOdds, bool bonus5, bool bonus10)
@@ -37,17 +34,18 @@ namespace HattrickPSK.Services
                 newTicket.Bonus10 = bonus10;
                 newTicket.Bonus5 = bonus5;
                 newTicket.PaymentTime = DateTime.Now;
+                newTicket.BetAmount = betAmountConverted;
                 newTicket.Odds = decimal.Parse(totalOdds,CultureInfo.InvariantCulture);
                 newTicket.User.Balance -= betAmountConverted;
-                dataAccess.db.Ticket.Add(newTicket);
-                
-                foreach (TicketEvent choosenEvent in choosenEvents)
+                dataAccess.db.Ticket.Add(newTicket);                
+
+                  foreach (TicketEvent choosenEvent in choosenEvents)
                     dataAccess.db.TicketEvent.Add(choosenEvent);
                     
                 dataAccess.db.SaveChanges();
 
-                dbContextTransaction.Commit();              
-            }
+               dbContextTransaction.Commit();
+           }
             return true;
         }
     }

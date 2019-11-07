@@ -15,9 +15,6 @@ namespace HattrickPSK.Messages
         public string ForgotenPasswordSubject()
         {
             return "Welcome to HatrickPSK";
-        }
-
-       
-    }
-  
+        }       
+    } 
 }

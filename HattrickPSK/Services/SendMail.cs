@@ -14,15 +14,13 @@ namespace HattrickPSK.Services
             {
                 if (smtp.TryConnect())
                     smtp.smtp.Send(mail.createMail);
-
             }
             catch (Exception ex)
             {
                 return ex.Message;
             }
 
-            return ""; 
-            
+            return "";             
         }
     }
 }

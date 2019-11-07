@@ -352,6 +352,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
@@ -366,9 +367,9 @@
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\BodyMessages.cs" />
     <Compile Include="Messages\IResponseErrorMessages.cs" />
-    <Compile Include="Migrations\201910182331057_InitialCreate.cs" />
-    <Compile Include="Migrations\201910182331057_InitialCreate.Designer.cs">
-      <DependentUpon>201910182331057_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201911070352311_InitialCreate.cs" />
+    <Compile Include="Migrations\201911070352311_InitialCreate.Designer.cs">
+      <DependentUpon>201911070352311_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\TicketEvent.cs" />
@@ -380,8 +381,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddBalanceService.cs" />
     <Compile Include="Services\AddTicket.cs" />
+    <Compile Include="Services\balanceValuesConst.cs" />
+    <Compile Include="Services\ChangePasswordService.cs" />
     <Compile Include="Services\IMailProviderConnection.cs" />
     <Compile Include="Services\MailMesage.cs" />
+    <Compile Include="Services\RegistrationService.cs" />
     <Compile Include="Services\SendMail.cs" />
     <Compile Include="Services\SmtpConnection.cs" />
   </ItemGroup>
@@ -435,6 +439,8 @@
     <Content Include="Views\Login\ForgottenPassword.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\AddBalance.cshtml" />
+    <Content Include="Views\Admin\AdminHome.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -456,8 +462,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201910182331057_InitialCreate.resx">
-      <DependentUpon>201910182331057_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201911070352311_InitialCreate.resx">
+      <DependentUpon>201911070352311_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

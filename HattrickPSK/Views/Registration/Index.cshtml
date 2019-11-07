@@ -9,60 +9,18 @@
 <head>
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/AngularController/RegistrationController.js"></script>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+  
 </head>
 <body>
-
-
-
-
-
-
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <div data-ng-app="myApp" data-ng-controller="registrationCtrl">
         <div class="container">
-            @*<h2>Horizontal form</h2>
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="email">Email:</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="pwd">Password:</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label><input type="checkbox" name="remember"> Remember me</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>*@
-
-
-
-
-
+            <h2 class="col-sm-offset-2">Registration</h2>
             <form name="Form" class="form-horizontal">
-                <h2>Registration</h2>
-                <br />
-                @*First name:<input type="text" name="firstname" placeholder="Enter first name" data-ng-model="user.firstname" required />
-            <span ng-show="Form.firstname.$touched&& Form.firstname.$invalid">The first name is required.</span>
 
-            <br />
-            <br />*@
+                <br />
+
                 <div class="form-group">
                     <label class="control-label col-sm-2">Firstname:</label>
                     <div class="col-sm-10">
@@ -90,11 +48,10 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Email:</label>
                     <div class="col-sm-10">
-                        <input type="text" data-ng-model="user.email" required id="firstname" placeholder="Enter email">
+                        <input type="text" data-ng-model="user.email" required class="form-control" id="email" placeholder="Enter email">
 
                     </div>
-                    <span ng-show="Form.email.$touched && Form.email.$invalid ">The email is required.</span>
-                    <span ng-show="Form.email.$touched && Form.email.$error.email">Invalid email address.</span>
+
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2">Username:</label>
@@ -102,46 +59,17 @@
                         <input type="text" data-ng-model="user.username" required class="form-control" id="firstname" placeholder="Enter username">
                     </div>
                 </div>
-                @*Last name:<input type="text" name="lastname" placeholder="Enter last name" data-ng-model="user.lastname" required /><br />
-            <span ng-show="Form.lastname.$touched&& Form.lastname.$invalid">The last name is required.</span>
-            <br />
-            <br />
-            <p>
-                Username:<input type="text" name="username" placeholder="Enter username" data-ng-model="user.username" required /><br />
-                <span ng-show="Form.username.$touched && Form.username.$invalid">The username is required.</span>
-            </p>
-            <p>
-                Password:<input type="password" name="password" placeholder="Enter passworde" data-ng-model="user.password" required /><br />
-                <span ng-show="Form.password.$touched && Form.password.$invalid">The password is required.</span>
-            </p>
-            <p>
-                Balance:<input type="number" name="balance" placeholder="Enter balancee (<10000)" data-ng-model="user.balance" required /><br />
-                <span ng-show="Form.balance.$touched && Form.balance.$invalid">The balance amount is required.</span>
-            </p>
-
-            <br />
-            Email:<input type="email" placeholder="Enter email" name="email" data-ng-model="user.email" required />
-
-            <span ng-show="Form.email.$touched && Form.email.$invalid ">The email is required.</span>
-            <span ng-show="Form.email.$touched && Form.email.$error.email">Invalid email address.</span>
-
-            <br />
-            <br />
-            <br />*@
+                </br>
                 <div class="form-group">
-                    <button class="btn-primary" value="Save" name="btnSave" ng-click="savedata(user)" ng-disabled="Form.$invalid || (Form.balance<10000 || Form.balance>0)" > Save </button>
-            </form>
-            <div class="form-group">
-                <button class="btn-secondary" value="Back to login" onclick="window.location.assign('/Login/index')" >Back to login </button>
-            </div>
-            </form>
-
+                    <div class="col-sm-offset-2">
+                        <button class="btn btn-primary" value="Save" name="btnSave" ng-click="savedata(user)" ng-disabled="Form.$invalid || (Form.balance<10000 || Form.balance>0)"> Save </button>
+                        <button class="btn btn-secondary" value="Back to login" onclick="window.location.assign('/Login/index')">Back to login </button>
+                    </div>
+                </div>
 
         </div>
-
-        </div>
-
-            @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/bundles/bootstrap")
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>

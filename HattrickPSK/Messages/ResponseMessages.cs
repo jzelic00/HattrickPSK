@@ -31,5 +31,15 @@ namespace HattrickPSK.Messages
         {
             return "<script>alert('Pogreska pri obradi transakcije, pokusajte ponovno kasnije')</script>";
         }
+
+        public string WronglyEnteredAmount(decimal min, decimal max)
+        {
+            return "<script>alert('Pogresno unesen iznos (max. " + max + " min. " + min +" )')</script>";
+        }
+
+        public string WrongOldPassword()
+        {
+            return "<script>alert('Pogresno unesena stara lozinka')</script>";
+        }
     }
 }

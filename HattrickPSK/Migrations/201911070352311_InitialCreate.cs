@@ -21,20 +21,6 @@ namespace HattrickPSK.Migrations
                 .PrimaryKey(t => t.EventID);
             
             CreateTable(
-                "dbo.TicketEvents",
-                c => new
-                    {
-                        TicketID = c.Int(nullable: false),
-                        EventID = c.Int(nullable: false),
-                        Tip = c.String(),
-                    })
-                .PrimaryKey(t => new { t.TicketID, t.EventID })
-                .ForeignKey("dbo.Events", t => t.EventID, cascadeDelete: true)
-                .ForeignKey("dbo.Tickets", t => t.TicketID, cascadeDelete: true)
-                .Index(t => t.TicketID)
-                .Index(t => t.EventID);
-            
-            CreateTable(
                 "dbo.Tickets",
                 c => new
                     {
@@ -51,6 +37,20 @@ namespace HattrickPSK.Migrations
                 .Index(t => t.UserID);
             
             CreateTable(
+                "dbo.TicketEvents",
+                c => new
+                    {
+                        TicketID = c.Int(nullable: false),
+                        EventID = c.Int(nullable: false),
+                        Tip = c.String(),
+                    })
+                .PrimaryKey(t => new { t.TicketID, t.EventID })
+                .ForeignKey("dbo.Events", t => t.EventID, cascadeDelete: true)
+                .ForeignKey("dbo.Tickets", t => t.TicketID, cascadeDelete: true)
+                .Index(t => t.TicketID)
+                .Index(t => t.EventID);
+            
+            CreateTable(
                 "dbo.Users",
                 c => new
                     {
@@ -60,6 +60,7 @@ namespace HattrickPSK.Migrations
                         LastName = c.String(),
                         Password = c.String(),
                         Balance = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Roles = c.String(),
                         Email = c.String(),
                     })
                 .PrimaryKey(t => t.UserID);
@@ -71,12 +72,12 @@ namespace HattrickPSK.Migrations
             DropForeignKey("dbo.Tickets", "UserID", "dbo.Users");
             DropForeignKey("dbo.TicketEvents", "TicketID", "dbo.Tickets");
             DropForeignKey("dbo.TicketEvents", "EventID", "dbo.Events");
-            DropIndex("dbo.Tickets", new[] { "UserID" });
             DropIndex("dbo.TicketEvents", new[] { "EventID" });
             DropIndex("dbo.TicketEvents", new[] { "TicketID" });
+            DropIndex("dbo.Tickets", new[] { "UserID" });
             DropTable("dbo.Users");
-            DropTable("dbo.Tickets");
             DropTable("dbo.TicketEvents");
+            DropTable("dbo.Tickets");
             DropTable("dbo.Events");
         }
     }

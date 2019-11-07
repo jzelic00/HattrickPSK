@@ -22,9 +22,7 @@
 
                 <tr ng-repeat="ticket in tickets | orderBy:'-PaymentTime'">
                     <td>{{ticket.TicketID}}</td>
-
                     <td>{{ticket.BetAmount}} kn</td>
-
                     <td>{{ticket.BetAmount*ticket.Odds}} kn</td>
                     <td>{{paymentTime(ticket.PaymentTime)}} </td>                  
                     <td>{{ticket.Odds}}</td>

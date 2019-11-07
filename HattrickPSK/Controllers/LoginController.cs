@@ -27,16 +27,16 @@ namespace HattrickPSK.Controllers
         public ActionResult Index(User user)
         {
             User currentUser = dataAcces.UserAutentification(user);
-                if (currentUser !=null)
-                {
-                    Session["UserID"] = Convert.ToInt32(currentUser.UserID);                  
-                    return RedirectToAction("Index","Home");
-                }
-                else
-                    Response.Write(responseMessage.LoginDataWrong());
-                return View();           
-        }
+            if (currentUser == null)
+            {
+                Response.Write(responseMessage.LoginDataWrong());
+                return View();
+            }
 
+            Session["UserID"] = Convert.ToInt32(currentUser.UserID);
+            return RedirectToAction("Index", "Home");
+        }
+    
         //user logout
         public ActionResult Logout()
         {
@@ -47,26 +47,22 @@ namespace HattrickPSK.Controllers
         public ActionResult ForgottenPassword()
         {
             return View();
-
         }
 
         [HttpPost]
         public ActionResult ForgottenPassword(User user)
         {
             User currentUser = dataAcces.findUserByEmail(user.Email);
-            if (currentUser != null)
-            {
-                SendMail sendMail = new SendMail();               
-                if (sendMail.Send(new MailMesage(currentUser, new BodyMessages()), new SmtpConnection()) != "")
-                {
-                    Response.Write(responseMessage.MailSendingError());
-                }
-            }             
-            else
+            if (currentUser == null)
             {
                 Response.Write(responseMessage.ForgotenPasswordWrongMail());
-                return View();
+                return View();                
             }
+
+            SendMail sendMail = new SendMail();
+            if (sendMail.Send(new MailMesage(currentUser, new BodyMessages()), new SmtpConnection()) != "")            
+                Response.Write(responseMessage.MailSendingError());
+            
             return RedirectToAction("Index", "Login");          
         }
     }

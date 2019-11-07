@@ -33,12 +33,25 @@ namespace HattrickPSK.Models
                 LastName = "Zelić",
                 Password = "12345",
                 Balance = 1000,
+                Roles="User",
                 Email = "jzelic00@fesb.hr"
+            };
+
+            User defaultAdmin = new User
+            {
+                Username = "dsaric00",
+                FirstName = "Duje",
+                LastName = "Šarić",
+                Password = "12345",
+                Balance = 1000,
+                Roles="Admin",
+                Email = "dsaric00@fesb.hr"
             };
 
             context.Event.AddRange(defaultEvents);
             context.User.Add(defaultUser);
-                base.Seed(context);
+            context.User.Add(defaultAdmin);
+            base.Seed(context);
             }
 
         

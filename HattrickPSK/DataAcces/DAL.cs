@@ -10,23 +10,22 @@ namespace HattrickPSK.DataAcces
     public class DAL : DataAccesInterface
     {
         
-        public DatabaseContext db = new DatabaseContext();
-
+        public DatabaseContext db = new DatabaseContext();      
+        
         public User findUserByID(int userId)
-        {          
+        {               
             return db.User.Where(p=>p.UserID==userId).SingleOrDefault();
         }
         public User UserAutentification(User user)
         {          
-            return db.User.Where(a => a.Username.Equals(user.Username) && a.Password.Equals(user.Password)).First();
+            return db.User.Where(a => a.Username.Equals(user.Username) && a.Password.Equals(user.Password)).FirstOrDefault();
         }
 
         public IList<Event> GetEvent()
         {
             return db.Event.ToList();
-
-        }     
-
+        }
+      
         public IList<Ticket> getTicket(int userId)
         {
             return db.Ticket.ToList().FindAll(p=>p.UserID==userId);
@@ -36,7 +35,10 @@ namespace HattrickPSK.DataAcces
             return db.User.Where(a => a.Email.Equals(email)).FirstOrDefault();
         }
 
-
+        public IList<User> getAllUsers()
+        {
+            return db.User.ToList();
+        }
     }
 
     

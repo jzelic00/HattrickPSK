@@ -13,7 +13,7 @@ namespace HattrickPSK.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201910182331057_InitialCreate"; }
+            get { return "201911070352311_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

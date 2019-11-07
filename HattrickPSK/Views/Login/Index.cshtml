@@ -9,6 +9,8 @@
 @*Sending user info to server*@
 @using (Html.BeginForm("Index", "Login", FormMethod.Post))
 {
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <fieldset>
         <legend>HattrickPSK login</legend>
 
@@ -27,33 +29,25 @@
                 <td>@Html.TextBoxFor(a => a.Username) </td>
                 <td>@Html.ValidationMessageFor(a => a.Username)</td>
             </tr>
+            
             <tr>
                 <td>
                     @Html.LabelFor(a => a.Password)
                 </td>
                 <td>
-                    @Html.PasswordFor(a => a.Password) 
+                    @Html.PasswordFor(a => a.Password)
                 </td>
                 <td>
                     @Html.ValidationMessageFor(a => a.Password)
                 </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" value="Login" />
-                </td>
-                @*Redirection to forget password form*@
-                <td>
-                    <input type="button" value="Forget Password?"  onclick="window.location.assign('/Login/Forgottenpassword')"/>
-                </td>
-                @*Redirection to registration form*@
-                <td>
-                    <input type="button"     value="Registration" onclick="window.location.assign('/Registration/index')"/>
-                </td>
-                <td></td>
-
-            </tr>
+              
         </table>
+        <br />
+        <input type="submit" class="btn btn-primary" value="Login" />&emsp;
+        <input type="button" class="btn btn-secondary" value="Forget password?" onclick="window.location.assign('/Login/Forgottenpassword')" />&emsp;
+        <input type="button" class="btn btn-secondary" value="Registration" onclick="window.location.assign('/Registration/index')" />
     </fieldset>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 }

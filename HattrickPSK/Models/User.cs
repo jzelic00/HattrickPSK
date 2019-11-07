@@ -14,8 +14,8 @@ namespace HattrickPSK.Models
         public string LastName { get; set; }
         public string Password { get; set; }
         public decimal Balance { get; set; }
+        public string Roles { get; set; }
         public string Email { get; set; }
-
 
         public virtual IList<Ticket> Ticket {get;set;}
         

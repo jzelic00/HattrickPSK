@@ -9,7 +9,6 @@ namespace HattrickPSK.Controllers
 {    
     public class WalletController : Controller
     {
-
         DAL dataAcces = new DAL();
         // GET: Wallet
         public ActionResult Wallet()

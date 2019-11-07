@@ -36,15 +36,13 @@ namespace HattrickPSK.Controllers
         {
             AddTicket newTicket = new AddTicket(Convert.ToInt32(Session["UserID"]));
             
-            if (newTicket.checkBalance(betAmount))
-            {
+            if (newTicket.checkBalance(betAmount))            
                 if (newTicket.MakeTransaction(choosenEvents, totalOdds, bonus5, bonus10))
                     return Json(JsonRequestBehavior.AllowGet);
                 else
                     Response.Write(responseMessages.TransactionErrorMessage());                    
-            }
-            else
-                Response.Write(responseMessages.InsufficientlyBalance());
+                       
+            Response.Write(responseMessages.InsufficientlyBalance());
 
             return Json(JsonRequestBehavior.AllowGet);
         }

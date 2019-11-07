@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -8,14 +7,16 @@ using System.Web;
 using System.Web.Mvc;
 using HattrickPSK.DataAcces;
 using HattrickPSK.Services;
-using HattrickPSK.Models;
+using HattrickPSK.Messages;
+using System;
 
 namespace HattrickPSK.Controllers
 {
     public class AccountController : Controller
     {
         DAL dataAcces = new DAL();
-        DatabaseContext db = new DatabaseContext();
+        ResponseMessages response = new ResponseMessages();
+
         // GET: Users
         public ActionResult Index()
         {
@@ -23,7 +24,7 @@ namespace HattrickPSK.Controllers
         }
 
         public ActionResult AddBalance()
-        {          
+        {
             return View();
         }
 
@@ -32,52 +33,30 @@ namespace HattrickPSK.Controllers
         public ActionResult AddBalance(decimal amount)
         {
             AddBalanceService addBalance = new AddBalanceService();
-            //if (amount < 0 || amount > 1000)
-            //{
-              //Response.Write("<script>alert('Pogresno unesen iznos (max. 1000 min. 1)')</script>");
 
-            //    return View();
-            //}
-            //else
-            //{
-            //    User user = db.User.Find(Session["UserID"]);
-            //    user.Balance += amount;
-            //    db.SaveChanges();w
+            if(addBalance.MakeBalanceTransaction(amount, Convert.ToInt32(Session["UserID"])))
                 return RedirectToAction("Index");
-            
+
+            Response.Write(response.WronglyEnteredAmount(balanceValuesConst.MIN_VALUE,balanceValuesConst.MAX_VALUE));
+            return View();           
         }
        
-        //
         public ActionResult ChangePassword()
         {
-           
             return View();
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword(string oldPassword,string newPassword)
+        public ActionResult ChangePassword(string oldPassword, string newPassword)
         {
-            User user = db.User.Find(Session["UserID"]);
+            ChangePasswordService _changePassword = new ChangePasswordService();
 
-            if (user.Password.Equals(oldPassword))
-            {               
-                user.Password = newPassword;
-                db.SaveChanges();
+            if(_changePassword.ChangePasswordTransaction(oldPassword,newPassword, Convert.ToInt32(Session["UserID"])))
                 return RedirectToAction("Index");
-            }
-            else
-            {
-               
-                Response.Write("<script>alert('Pogresno unesena stara lozinka')</script>");
-                
-                return View();
-            }
-               
-           
-        }
 
-       
+            Response.Write(response.WrongOldPassword());
+            return View();          
+        }
     }
 }

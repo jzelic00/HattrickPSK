@@ -9,6 +9,7 @@ namespace HattrickPSK.DataAcces
 {
     interface DataAccesInterface
     {
+        IList<User> getAllUsers();
         User UserAutentification(User user);
         IList<Event> GetEvent();
         IList<Ticket> getTicket(int userId);          

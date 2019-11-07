@@ -18,7 +18,7 @@ namespace HattrickPSK.Services
                 smtp.Credentials = new System.Net.NetworkCredential("hattrickpsk@outlook.com", "Grf55psf");
                 return true;
             }
-        else
+       
             return false;          
         }              
     }

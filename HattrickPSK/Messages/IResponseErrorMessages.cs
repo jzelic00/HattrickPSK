@@ -13,5 +13,6 @@ namespace HattrickPSK.Messages
         string MailSendingError();
         string TransactionErrorMessage();
         string InsufficientlyBalance();
+        string WronglyEnteredAmount(decimal min, decimal max);
     }
 }
