@@ -52,9 +52,7 @@ namespace HattrickPSK.Models
             context.User.Add(defaultUser);
             context.User.Add(defaultAdmin);
             base.Seed(context);
-            }
-
-        
-        
+            }        
+      
     }
 }
