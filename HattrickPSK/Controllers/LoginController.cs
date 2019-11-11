@@ -9,16 +9,19 @@ using HattrickPSK.Services;
 using HattrickPSK.DataAcces;
 using HattrickPSK.Messages;
 
+using System.Web.Security;
+
+
 namespace HattrickPSK.Controllers
 {
     public class LoginController : Controller
     {
         ResponseMessages responseMessage = new ResponseMessages();
         DAL dataAcces = new DAL();
-
+        
         // GET: Login
         public ActionResult Index()
-        {
+        {           
             return View();
         }
 
@@ -32,14 +35,17 @@ namespace HattrickPSK.Controllers
                 Response.Write(responseMessage.LoginDataWrong());
                 return View();
             }
-
+          
+            FormsAuthentication.SetAuthCookie(user.Username,false);           
             Session["UserID"] = Convert.ToInt32(currentUser.UserID);
+           
             return RedirectToAction("Index", "Home");
         }
     
         //user logout
         public ActionResult Logout()
         {
+            FormsAuthentication.SignOut();
             Session.Abandon();
             return RedirectToAction("Index","Login");
         }

@@ -26,14 +26,24 @@ namespace HattrickPSK.Models
                 new Event() { Type = "Tenis", Name = "Đokovic - Cilić", Tip1 = 1.20m, Tip2 = 1.60m, TipX = 4.35m }
             };
 
+            IList<Role> defaultRoles = new List<Role>
+            {
+                 new Role(){ RoleName="Admin"},
+                 new Role(){ RoleName="User"}
+            };
+
+            IList<UserRole> defaultUserRole = new List<UserRole>
+            {
+                new UserRole(){ UserID=1,RoleID=2},
+                 new UserRole(){ UserID=2,RoleID=1}
+            };
             User defaultUser = new User
             {
-                Username="jzelic00",
+                Username = "jzelic00",
                 FirstName = "Josip",
                 LastName = "Zelić",
                 Password = "12345",
-                Balance = 1000,
-                Roles="User",
+                Balance = 1000,                
                 Email = "jzelic00@fesb.hr"
             };
 
@@ -43,18 +53,18 @@ namespace HattrickPSK.Models
                 FirstName = "Duje",
                 LastName = "Šarić",
                 Password = "12345",
-                Balance = 1000,
-                Roles="Admin",
-                Email = "dsaric00@fesb.hr"
+                Balance = 1000,               
+                Email = "dsaric00@fesb.hr"                
             };
+
 
             context.Event.AddRange(defaultEvents);
             context.User.Add(defaultUser);
             context.User.Add(defaultAdmin);
-            base.Seed(context);
-            }
+            context.Role.AddRange(defaultRoles);
+            context.UserRole.AddRange(defaultUserRole);
 
-        
-        
+            base.Seed(context);
+            }               
     }
 }

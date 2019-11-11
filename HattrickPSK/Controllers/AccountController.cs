@@ -12,6 +12,7 @@ using System;
 
 namespace HattrickPSK.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         DAL dataAcces = new DAL();

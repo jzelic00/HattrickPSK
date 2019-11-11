@@ -11,6 +11,7 @@ namespace HattrickPSK.Services
     {
         DAL dataAccess = new DAL();
         IList<User> allUsers;
+        
         public int RegistrationMethod(User newUser)
         {
             allUsers = dataAccess.getAllUsers();
@@ -20,11 +21,11 @@ namespace HattrickPSK.Services
                     return 2;
                 else if (newUser.Username == user.Username)
                     return 1;
-
-            dataAccess.db.User.Add(newUser);
+           
+            dataAccess.db.User.Add(newUser);         
             dataAccess.db.SaveChanges();
 
             return 0;
-            }
+         }
     }
 }

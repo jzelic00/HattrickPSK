@@ -14,6 +14,8 @@ namespace HattrickPSK.DataAcces
         IList<Event> GetEvent();
         IList<Ticket> getTicket(int userId);          
         User findUserByID(int userId);
-        User findUserByEmail(string email);      
+        User findUserByEmail(string email);
+        User fingUserByUsername(string username);
+       
     }
 }

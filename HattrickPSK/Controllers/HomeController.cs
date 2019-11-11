@@ -13,13 +13,13 @@ using HattrickPSK.Messages;
 
 namespace HattrickPSK.Controllers
 {
-    
+    [Authorize]
     public class HomeController : Controller
     {
 
         DAL dataAcces = new DAL();
         ResponseMessages responseMessages = new ResponseMessages();
-
+        
         public ActionResult Index()
         {
             return View();

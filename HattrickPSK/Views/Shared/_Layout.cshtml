@@ -26,15 +26,20 @@
                 @Html.ActionLink("HattrickPSK", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+               
                 <ul class="nav navbar-nav">
 
-                    <li>@Html.ActionLink("My Wallet", "Wallet", "Wallet")</li>
-                    
-                    <li>@Html.ActionLink("Account", "Index", "Account")</li>
-                   
-                </ul>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("All User", "AdminHome", "Admin")</li>
+                    }
+                        <li>@Html.ActionLink("My Wallet", "Wallet", "Wallet")</li>
+
+                        <li>@Html.ActionLink("Account", "Index", "Account")</li>
+
+                    </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Logout","Logout","Login")</li>
+                    <li>@Html.ActionLink("Logout", "Logout", "Login")</li>
                 </ul>
             </div>
         </div>

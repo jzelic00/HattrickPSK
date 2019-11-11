@@ -5,8 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using HattrickPSK.Models;
 using HattrickPSK.DataAcces;
+using System.Web.Security;
+
 namespace HattrickPSK.Controllers
-{    
+{
+    [Authorize]
     public class WalletController : Controller
     {
         DAL dataAcces = new DAL();
@@ -18,8 +21,8 @@ namespace HattrickPSK.Controllers
              
         [HttpGet]     
         public JsonResult GetTicket()
-        {                              
-           return Json(dataAcces.getTicket(Convert.ToInt32(Session["UserID"])),JsonRequestBehavior.AllowGet);                              
+        {           
+            return Json(dataAcces.getTicket(Convert.ToInt32(Session["UserID"])),JsonRequestBehavior.AllowGet);                              
         }     
     }
 }

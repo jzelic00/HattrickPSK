@@ -39,7 +39,11 @@ namespace HattrickPSK.DataAcces
         {
             return db.User.ToList();
         }
-    }
 
-    
+        public User fingUserByUsername(string username)
+        {
+            return db.User.Where(p => p.Username == username).FirstOrDefault();
+        }
+      
+    }   
 }
