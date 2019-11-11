@@ -65,6 +65,9 @@ namespace HattrickPSK.Models
             context.UserRole.AddRange(defaultUserRole);
 
             base.Seed(context);
-            }               
+            }
+
+        
+        
     }
 }
