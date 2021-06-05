@@ -161,7 +161,6 @@ myApp.controller("HomeController", function ($scope, $http) {
 
         }
 
-
         $scope.addBonus5(sportTypes);
         $scope.addBonus10(sportTypes);
 

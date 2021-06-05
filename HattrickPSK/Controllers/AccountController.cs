@@ -9,21 +9,34 @@ using HattrickPSK.DataAcces;
 using HattrickPSK.Services;
 using HattrickPSK.Messages;
 using System;
+using HattrickPSK.Messages.MessageInterfaces;
 
 namespace HattrickPSK.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        DAL dataAcces = new DAL();
-        ResponseMessages response = new ResponseMessages();
+
+        private readonly IDataAccess dataAccess;
+        IAddBalanceService addBalance;
+        IChangePasswordService changePassword;
+        IBalanceErrorMessagess balanceErrorMessagess;
+        IChangePasswordErrorMessages changePasswordErrorMessages;
+
+        public AccountController(IDataAccess _db,IChangePasswordService _changePasswordService,IAddBalanceService _addBalanceService)
+        {
+            dataAccess = _db;            
+            addBalance = _addBalanceService;
+            changePassword = _changePasswordService;
+        }
 
         // GET: Users
         public ActionResult Index()
         {
-            return View(dataAcces.findUserByID(Convert.ToInt32(Session["UserID"])));
+            return View(dataAccess.findUserByID(Convert.ToInt32(Session["UserID"])));
         }
 
+        #region AddBalance
         public ActionResult AddBalance()
         {
             return View();
@@ -33,31 +46,34 @@ namespace HattrickPSK.Controllers
         [HttpPost]
         public ActionResult AddBalance(decimal amount)
         {
-            AddBalanceService addBalance = new AddBalanceService();
-
-            if(addBalance.MakeBalanceTransaction(amount, Convert.ToInt32(Session["UserID"])))
+           if(addBalance.MakeBalanceTransaction(amount, Convert.ToInt32(Session["UserID"])))
                 return RedirectToAction("Index");
 
-            Response.Write(response.WronglyEnteredAmount(balanceValuesConst.MIN_VALUE,balanceValuesConst.MAX_VALUE));
+            balanceErrorMessagess = new BalanceErrorMessages();
+            Response.Write(balanceErrorMessagess.WronglyEnteredAmount(balanceValuesConst.MIN_VALUE,balanceValuesConst.MAX_VALUE));
             return View();           
         }
-       
+        #endregion
+
+        #region ChangePassword
         public ActionResult ChangePassword()
         {
             return View();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(string oldPassword, string newPassword)
         {
-            ChangePasswordService _changePassword = new ChangePasswordService();
-
-            if(_changePassword.ChangePasswordTransaction(oldPassword,newPassword, Convert.ToInt32(Session["UserID"])))
+            
+            if(changePassword.ChangePasswordTransaction(oldPassword,newPassword, Convert.ToInt32(Session["UserID"])))
                 return RedirectToAction("Index");
 
-            Response.Write(response.WrongOldPassword());
+            changePasswordErrorMessages = new ChangePasswordErrorMessages();
+            Response.Write(changePasswordErrorMessages.WrongOldPassword());
             return View();          
         }
+        #endregion
     }
 }

@@ -8,12 +8,15 @@ namespace HattrickPSK.Services
 {
     public class SendMail
     {
-        public string Send(MailMesage mail, SmtpConnection smtp)
+        public string Send(FormMailMesage mail, SmtpConnection smtp)
         {
             try
             {
                 if (smtp.TryConnect())
-                    smtp.smtp.Send(mail.createMail);
+                {
+                    mail.FormMail();
+                    smtp.SendMailWithProvider(mail.createMail);
+                }
             }
             catch (Exception ex)
             {

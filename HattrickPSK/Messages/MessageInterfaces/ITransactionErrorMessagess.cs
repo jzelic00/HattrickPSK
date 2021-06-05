@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HattrickPSK.Messages
 {
-    public interface IMessage
+    public interface ITransactionErrorMessagess
     {
-        string ForgotenPasswordMessage(string username, string password);
-        string ForgotenPasswordSubject();     
+        string TransactionErrorMessage();
     }
 }

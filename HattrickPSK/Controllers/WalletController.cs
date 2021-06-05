@@ -12,7 +12,11 @@ namespace HattrickPSK.Controllers
     [Authorize]
     public class WalletController : Controller
     {
-        DAL dataAcces = new DAL();
+        private IDataAccess dataAccess;
+        public WalletController(IDataAccess _db)
+        {
+            dataAccess = _db;
+        }
         // GET: Wallet
         public ActionResult Wallet()
         {
@@ -22,7 +26,7 @@ namespace HattrickPSK.Controllers
         [HttpGet]     
         public JsonResult GetTicket()
         {           
-            return Json(dataAcces.getTicket(Convert.ToInt32(Session["UserID"])),JsonRequestBehavior.AllowGet);                              
+            return Json(dataAccess.getTicket(Convert.ToInt32(Session["UserID"])),JsonRequestBehavior.AllowGet);                              
         }     
     }
 }

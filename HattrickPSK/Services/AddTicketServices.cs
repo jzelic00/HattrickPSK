@@ -9,13 +9,14 @@ using System.Globalization;
 
 namespace HattrickPSK.Services
 {
-    public class AddTicket
+    public class AddTicketServices
     {
-        DAL dataAccess = new DAL();
-        Ticket newTicket = new Ticket();
+        private readonly IDataAccess dataAccess;
+        Ticket newTicket=new Ticket();
         decimal betAmountConverted;
-        public AddTicket(int userId)
+        public AddTicketServices(int userId,IDataAccess _db)
         {
+            dataAccess = _db;
             newTicket.User = dataAccess.findUserByID(userId);           
         }
       
@@ -28,8 +29,8 @@ namespace HattrickPSK.Services
         }
 
         public bool MakeTransaction(ICollection<TicketEvent> choosenEvents, string totalOdds, bool bonus5, bool bonus10)
-        {        
-            using (var dbContextTransaction = dataAccess.db.Database.BeginTransaction())
+        {
+            using (var dbContextTransaction = dataAccess.Transaction())
             {
                 newTicket.Bonus10 = bonus10;
                 newTicket.Bonus5 = bonus5;
@@ -37,12 +38,13 @@ namespace HattrickPSK.Services
                 newTicket.BetAmount = betAmountConverted;
                 newTicket.Odds = decimal.Parse(totalOdds,CultureInfo.InvariantCulture);
                 newTicket.User.Balance -= betAmountConverted;
-                dataAccess.db.Ticket.Add(newTicket);                
 
-                  foreach (TicketEvent choosenEvent in choosenEvents)
+                dataAccess.db.Ticket.Add(newTicket);
+
+                foreach (TicketEvent choosenEvent in choosenEvents)
                     dataAccess.db.TicketEvent.Add(choosenEvent);
-                    
-                dataAccess.db.SaveChanges();
+
+                dataAccess.saveChanges();
 
                dbContextTransaction.Commit();
            }

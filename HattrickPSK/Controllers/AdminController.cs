@@ -18,11 +18,15 @@ namespace HattrickPSK.Controllers
     [Authorize(Roles="Admin")]
     public class AdminController : Controller
     {
-        DAL dataAccess = new DAL();
+        private readonly IDataAccess dataAccess;
+
+        public AdminController(IDataAccess _db)
+        {
+            dataAccess = _db;
+        }
         
         public ActionResult AdminHome()
-        {
-            
+        {            
             return View(dataAccess.getAllUsers());
         }
     }

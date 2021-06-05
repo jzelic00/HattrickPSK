@@ -1,6 +1,4 @@
 ﻿myApp.controller("WalletController", function ($scope, $http) {
-
-
 	
 	$scope.events = [];
     
@@ -8,9 +6,7 @@
 	$http.get('/Wallet/GetTicket')
         .then(function succesCallback(response) {
                       
-            $scope.tickets = response.data;
-
-         
+            $scope.tickets = response.data;        
             
 		}, function errorCallback(response) {
 

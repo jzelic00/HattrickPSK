@@ -7,11 +7,14 @@ using HattrickPSK.DataAcces;
 
 namespace HattrickPSK.Services
 {
-    public class RegistrationService
+    public class RegistrationService :IRegistrationService
     {
-        DAL dataAccess = new DAL();
         IList<User> allUsers;
-        
+        private readonly IDataAccess dataAccess;
+        public RegistrationService(IDataAccess _db)
+        {
+            dataAccess = _db;
+        }
         public int RegistrationMethod(User newUser)
         {
             allUsers = dataAccess.getAllUsers();
@@ -22,8 +25,8 @@ namespace HattrickPSK.Services
                 else if (newUser.Username == user.Username)
                     return 1;
            
-            dataAccess.db.User.Add(newUser);         
-            dataAccess.db.SaveChanges();
+            dataAccess.addUser(newUser);         
+            dataAccess.saveChanges();
 
             return 0;
          }

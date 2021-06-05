@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Security;
 using HattrickPSK.DataAcces;
 using HattrickPSK.Models;
@@ -10,8 +11,15 @@ namespace HattrickPSK.RoleProvides
 {
     public class UserRoleProvider : RoleProvider
     {
-        DAL dataAccess = new DAL();
-        User currentUser = new User();
+
+        User currentUser;
+        readonly IDataAccess dataAccess;
+        
+        public UserRoleProvider()
+        {
+            //bez ovoga runtime error zbog definiranja bezparametarskog konstruktora uweb.config na 25
+           dataAccess= DependencyResolver.Current.GetService<IDataAccess>();
+        }
         public override string ApplicationName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
@@ -40,7 +48,9 @@ namespace HattrickPSK.RoleProvides
         }
 
         public override string[] GetRolesForUser(string username)
-        {                      
+        {
+            currentUser = new User();
+
                 var userRoles = (from user in dataAccess.db.User
                                  join roleMapping in dataAccess.db.UserRole
                                  on user.UserID equals roleMapping.UserID

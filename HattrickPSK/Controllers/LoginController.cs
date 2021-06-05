@@ -16,9 +16,17 @@ namespace HattrickPSK.Controllers
 {
     public class LoginController : Controller
     {
-        ResponseMessages responseMessage = new ResponseMessages();
-        DAL dataAcces = new DAL();
+        IDataAccess dataAccess;
+        ForgottenPassworErrordMessages forgottenPassworErrorMessages;
+        ILoginErrorMessagess loginErrorMessagess;
+        SendMail sendMail;
         
+        public LoginController(IDataAccess _db,ILoginErrorMessagess _loginErrorMessagess)
+        {
+            dataAccess = _db;
+            loginErrorMessagess = _loginErrorMessagess;
+        }
+
         // GET: Login
         public ActionResult Index()
         {           
@@ -29,10 +37,11 @@ namespace HattrickPSK.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(User user)
         {
-            User currentUser = dataAcces.UserAutentification(user);
+            User currentUser = dataAccess.UserAutentification(user);
+
             if (currentUser == null)
             {
-                Response.Write(responseMessage.LoginDataWrong());
+                Response.Write(loginErrorMessagess.LoginDataWrong());
                 return View();
             }
           
@@ -41,15 +50,17 @@ namespace HattrickPSK.Controllers
            
             return RedirectToAction("Index", "Home");
         }
-    
-        //user logout
+
+        #region Logout
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
             Session.Abandon();
             return RedirectToAction("Index","Login");
         }
-       
+        #endregion
+
+        #region ForgottenPassword
         public ActionResult ForgottenPassword()
         {
             return View();
@@ -58,18 +69,20 @@ namespace HattrickPSK.Controllers
         [HttpPost]
         public ActionResult ForgottenPassword(User user)
         {
-            User currentUser = dataAcces.findUserByEmail(user.Email);
+            User currentUser = dataAccess.findUserByEmail(user.Email);
+            forgottenPassworErrorMessages = new ForgottenPassworErrordMessages();
             if (currentUser == null)
             {
-                Response.Write(responseMessage.ForgotenPasswordWrongMail());
+                Response.Write(forgottenPassworErrorMessages.ForgottenPasswordWrongMail());
                 return View();                
             }
 
-            SendMail sendMail = new SendMail();
-            if (sendMail.Send(new MailMesage(currentUser, new BodyMessages()), new SmtpConnection()) != "")            
-                Response.Write(responseMessage.MailSendingError());
+            sendMail = new SendMail();
+            if (sendMail.Send(new FormMailMesage(currentUser, new ForgottenPasswordMailMessageBody()), new SmtpConnection()) != "")            
+                Response.Write(forgottenPassworErrorMessages.MailSendingError());
             
             return RedirectToAction("Index", "Login");          
         }
+        #endregion
     }
 }

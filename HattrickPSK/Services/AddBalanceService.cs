@@ -7,20 +7,27 @@ using HattrickPSK.DataAcces;
 
 namespace HattrickPSK.Services
 {
-    public class AddBalanceService : balanceValuesConst
+    public class AddBalanceService:IAddBalanceService
     {
-        DAL dataAccess = new DAL();
-        User currentUser = new User();
+        IDataAccess dataAccess;
+        public const decimal MIN_VALUE = 20;
+        public const decimal MAX_VALUE = 1000;
+        User currentUser;
+        public AddBalanceService(IDataAccess _db)
+        {
+            dataAccess = _db;
+        }
         public bool MakeBalanceTransaction(decimal amount,int userId)
         {
             if (amount < MIN_VALUE || amount > MAX_VALUE)
                 return false;
 
-            using (var dbContextTransaction = dataAccess.db.Database.BeginTransaction())
+            currentUser = new User();
+            using (var dbContextTransaction = dataAccess.Transaction())
                 {
                     currentUser = dataAccess.findUserByID(userId);
                     currentUser.Balance += amount;                 
-                    dataAccess.db.SaveChanges();
+                    dataAccess.saveChanges();
                     dbContextTransaction.Commit();                  
                 }
            return true;                      

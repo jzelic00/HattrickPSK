@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using HattrickPSK.Models;
@@ -7,10 +8,17 @@ using HattrickPSK.Models;
 
 namespace HattrickPSK.DataAcces
 {
-    public class DAL : DataAccesInterface
+    public class DAL : IDataAccess
     {
-        
-        public DatabaseContext db = new DatabaseContext();      
+        public DatabaseContext db { get; set; }
+
+        public DAL()
+        { 
+        }
+        public DAL(DatabaseContext _db)
+        {
+            db = _db;
+        }
         
         public User findUserByID(int userId)
         {               
@@ -44,6 +52,20 @@ namespace HattrickPSK.DataAcces
         {
             return db.User.Where(p => p.Username == username).FirstOrDefault();
         }
-      
+
+        public void addUser(User newUser)
+        {
+            db.User.Add(newUser);
+        }
+
+        public void saveChanges()
+        {
+            db.SaveChanges();
+        }
+
+        public DbContextTransaction Transaction()
+        {
+            return db.Database.BeginTransaction();
+        }
     }   
 }

@@ -17,9 +17,17 @@ namespace HattrickPSK.Controllers
     public class HomeController : Controller
     {
 
-        DAL dataAcces = new DAL();
-        ResponseMessages responseMessages = new ResponseMessages();
-        
+        private readonly IDataAccess dataAccess;
+        AddTicketServices newTicket;
+        ITransactionErrorMessagess transactionErrorMessagess;
+        IBalanceErrorMessagess balanceErrorMessagess;
+
+        public HomeController(IDataAccess _db, IBalanceErrorMessagess _balanceErrorMessagess, ITransactionErrorMessagess _transactionErrorMessagess)
+        {
+            dataAccess = _db;
+            balanceErrorMessagess= _balanceErrorMessagess;
+            transactionErrorMessagess = _transactionErrorMessagess;
+        }
         public ActionResult Index()
         {
             return View();
@@ -28,21 +36,21 @@ namespace HattrickPSK.Controllers
         [HttpGet]
         public JsonResult GetEvents()
         {          
-            return Json(dataAcces.GetEvent(),JsonRequestBehavior.AllowGet);
+            return Json(dataAccess.GetEvent(),JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public JsonResult TicketRecive(ICollection<TicketEvent> choosenEvents, string totalOdds, bool bonus5, bool bonus10, string betAmount)
         {
-            AddTicket newTicket = new AddTicket(Convert.ToInt32(Session["UserID"]));
+            newTicket= new AddTicketServices(Convert.ToInt32(Session["UserID"]),dataAccess);
             
             if (newTicket.checkBalance(betAmount))            
                 if (newTicket.MakeTransaction(choosenEvents, totalOdds, bonus5, bonus10))
                     return Json(JsonRequestBehavior.AllowGet);
                 else
-                    Response.Write(responseMessages.TransactionErrorMessage());                    
+                    Response.Write(transactionErrorMessagess.TransactionErrorMessage());                    
                        
-            Response.Write(responseMessages.InsufficientlyBalance());
+            Response.Write(balanceErrorMessagess.InsufficientlyBalance());
 
             return Json(JsonRequestBehavior.AllowGet);
         }

@@ -6,9 +6,14 @@ using System.Web;
 
 namespace HattrickPSK.Services
 {
-    public class SmtpConnection: IMailProviderConnection
+    public class SmtpConnection: IMailProviderConnection,ISendProviderMail
     {
         public SmtpClient smtp = new SmtpClient("smtp.live.com", 587);
+
+        public void SendMailWithProvider(MailMessage mailContent)
+        {
+            smtp.Send(mailContent);
+        }
 
         public bool TryConnect()
         {

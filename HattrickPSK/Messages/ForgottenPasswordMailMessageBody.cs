@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using HattrickPSK.Messages.MessageInterfaces;
 
 namespace HattrickPSK.Messages
 {
-    public class BodyMessages : IMessage
+    public class ForgottenPasswordMailMessageBody : IForgotenPasswordBodyMessage
     {        
         public string ForgotenPasswordMessage(string username, string password)
         {
